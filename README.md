@@ -14,9 +14,23 @@ Ce script Python met en place un serveur "tarpit" multi-protocoles. Son objectif
 
 ---
 
-## Code 2
+## Code 2 : `blackh2 (1).py`
 
-*(Description du deuxième code à ajouter ici)*
+Ce script Python implémente un système de surveillance et de blacklisting automatique des adresses IP basé sur la détection de connexions suspectes. Son objectif principal est d'identifier et de bloquer automatiquement les adresses IP qui effectuent trop de tentatives de connexion dans un laps de temps donné.
+
+## Fonctionnement :
+
+* **Surveillance des Logs :** Le script surveille en temps réel un fichier de log (`/tmp/flask_connections.log`) contenant les connexions. Il utilise un thread dédié pour lire continuellement les nouvelles entrées du fichier.
+
+* **Détection des Tentatives Répétées :** Pour chaque adresse IP, le système maintient un historique horodaté des tentatives de connexion dans une fenêtre de temps glissante (par défaut 60 secondes). Les tentatives trop anciennes sont automatiquement supprimées pour ne garder que les connexions récentes.
+
+* **Blacklisting Automatique :** Si une adresse IP dépasse le nombre maximal de tentatives autorisées (par défaut 3) dans la fenêtre de temps définie, elle est automatiquement ajoutée à la blacklist. Les adresses locales (127.0.0.1, ::1) sont exemptées de cette surveillance.
+
+* **Persistance sur Fichier :** La liste des IPs blacklistées est sauvegardée dans un fichier JSON (`blacklist.json`) pour persister entre les redémarrages du script. Ce fichier contient également la date de dernière mise à jour.
+
+* **Journalisation :** Toutes les actions de blacklisting sont enregistrées dans un fichier de log dédié (`/var/log/auto_blacklist.log`) avec horodatage, permettant un audit des décisions automatiques du système.
+
+* **Monitoring Continu :** Le script affiche périodiquement (toutes les 30 secondes) le nombre total d'IPs blacklistées et un échantillon des adresses bloquées pour permettre un suivi en temps réel de l'activité.
 
 ---
 
