@@ -1,5 +1,3 @@
-Bien sûr, voici la version en Markdown.
-
 # Projet : IPv4 Blackhole
 
 ## Code 1 : `false_bannier_all.py`
