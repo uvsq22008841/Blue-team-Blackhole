@@ -88,5 +88,4 @@ sudo ./blackhole.sh status
 # Retirer toutes les règles et le shaping
 sudo ./blackhole.sh rollback
 
-
 *(Description du cinquième code à ajouter ici)*
