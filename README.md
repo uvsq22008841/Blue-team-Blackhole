@@ -56,6 +56,37 @@ Le script envoie des logs des connexions en cours. celle qui commence? celle qui
 
 ---
 
-## Code 4
+## Code 4 `blackhole.sh`
 
-*(Description du quatrième code à ajouter ici)*
+Script bash pour Linux qui met en place un filtrage réseau strict (“no-pass” par défaut) et une détection anti-scan avec dégradation active du trafic des scanneurs.
+
+- Par défaut: tout trafic est silencieusement DROP (no-response → “filtered”), sauf les ports explicitement autorisés.
+- Whitelist par ports TCP/UDP configurables (ex. SSH 22).
+- Anti-scan dynamique: si une IP envoie ≥ N SYN en T secondes, elle est ajoutée à un ipset et subit une latence/perte de paquets via `tc netem` sur l’ingress (IFB) et l’egress.
+- Chaînes et objets utilisés: `iptables` (BH_INPUT, BH_SCANNER), `ipset` (set “scanners”), `tc` (qdisc prio + netem), IFB (`ifb0` par défaut).
+
+### Prérequis
+- Linux avec `iptables`, `ipset`, `iproute2 (tc)`, module noyau `ifb`.
+- Droits root (sudo).
+- Interface réseau détectable automatiquement ou spécifiée.
+
+### Paramètres clés
+- `WHITELIST_TCP` / `WHITELIST_UDP`: ports autorisés (ex: `WHITELIST_TCP=(22)`).
+- `ADMIN_ALLOW`: IP/CIDR autorisées à tout contourner (ex: `("192.168.1.10/32")`).
+- `IFACE`: interface réseau (auto si vide).
+- Anti-scan: `SCANNER_SYNS` (par défaut 10), `SCANNER_WINDOW` (5s), `ATTACK_DELAY_MS` (10000ms), `ATTACK_LOSS_PC` (50%).
+- Avancé: `SCANNER_IPSET_NAME` (scanners), `SCANNER_IFB` (ifb0), `BH_MARK_HEX` (0x30).
+
+### Commandes
+```bash
+# Activer le blackhole strict + anti-scan
+sudo ./blackhole.sh apply
+
+# Afficher l’état (iptables/ipset/tc)
+sudo ./blackhole.sh status
+
+# Retirer toutes les règles et le shaping
+sudo ./blackhole.sh rollback
+
+
+*(Description du cinquième code à ajouter ici)*
