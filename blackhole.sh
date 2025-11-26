@@ -9,13 +9,11 @@ set -euo pipefail
 # - Anti-scan dynamique: si une IP émet >= SCANNER_SYNS SYN en SCANNER_WINDOW s,
 #   on lui applique DELAY/PERTES sur TOUT son trafic (egress + ingress via IFB).
 # - Pas de DELAY/TARPIT par port ici (philosophie "ne jamais laisser passer").
-#
-# LANCE EN ROOT. Teste d'abord en console pour éviter de te verrouiller.
 
 # -------- PARAMÈTRES --------
 
 # Ports autorisés (TCP/UDP) – tout le reste est blackhole (DROP)
-WHITELIST_TCP=(22)      # ⚠️ garde 22 si tu administres à distance
+WHITELIST_TCP=(22)      # port 22 si SSH
 WHITELIST_UDP=()        # souvent vide
 
 # IP(s) d’admin qui contournent tout (sources autorisées)
